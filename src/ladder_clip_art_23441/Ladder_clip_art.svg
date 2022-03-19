@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+	"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.0"
+   width="255.28572"
+   height="650.60413"
+   id="svg2">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3181">
+      <stop
+         id="stop3183"
+         style="stop-color:#7a5a36;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop3189"
+         style="stop-color:#a57948;stop-opacity:1"
+         offset="0.5" />
+      <stop
+         id="stop3185"
+         style="stop-color:#decab2;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       x1="-185.57915"
+       y1="286.97354"
+       x2="-165.57915"
+       y2="286.97354"
+       id="linearGradient4977"
+       xlink:href="#linearGradient3181"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       x1="177.14287"
+       y1="739.60913"
+       x2="159.5"
+       y2="-181.68291"
+       id="linearGradient4979"
+       xlink:href="#linearGradient3181"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     transform="translate(-4.4703484e-6,1.2926102e-7)"
+     id="layer1">
+    <g
+       transform="translate(-159.5,-89.00504)"
+       id="g4959">
+      <rect
+         width="19.255669"
+         height="186.14896"
+         ry="0"
+         x="-185.20697"
+         y="193.89906"
+         transform="matrix(0,-1,1,0,0,0)"
+         id="rect2387"
+         style="opacity:1;fill:url(#linearGradient4977);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.74433148;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <rect
+         width="34.389545"
+         height="649.70795"
+         ry="17.194773"
+         x="159.94809"
+         y="89.453125"
+         id="rect2383"
+         style="opacity:1;fill:url(#linearGradient4979);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.89617026px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <use
+         transform="translate(220,0)"
+         id="use2385"
+         x="0"
+         y="0"
+         width="744.09448"
+         height="1052.3622"
+         xlink:href="#rect2383" />
+      <use
+         transform="translate(0,94.149658)"
+         id="use3159"
+         x="0"
+         y="0"
+         width="744.09448"
+         height="1052.3622"
+         xlink:href="#rect2387" />
+      <use
+         transform="translate(0,94.149653)"
+         id="use3161"
+         x="0"
+         y="0"
+         width="744.09448"
+         height="1052.3622"
+         xlink:href="#use3159" />
+      <use
+         transform="translate(0,188.29932)"
+         id="use3163"
+         x="0"
+         y="0"
+         width="744.09448"
+         height="1052.3622"
+         xlink:href="#use3159" />
+      <use
+         transform="translate(0,282.44896)"
+         id="use3165"
+         x="0"
+         y="0"
+         width="744.09448"
+         height="1052.3622"
+         xlink:href="#use3159" />
+      <use
+         transform="translate(0,470.74829)"
+         id="use3191"
+         x="0"
+         y="0"
+         width="744.09448"
+         height="1052.3622"
+         xlink:href="#rect2387" />
+    </g>
+  </g>
+</svg>
