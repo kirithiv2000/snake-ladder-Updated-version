@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   ChakraProvider,
   Box,
   Text,
-  Link,
+  Container,
   VStack,
   Code,
   Grid,
+  Heading,
+  Divider,
+  Button,
+  useBreakpointValue,
   theme,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { Logo } from './Logo';
 import { Ladder } from './ladder';
 import { Badge,Stack ,HStack ,Avatar} from '@chakra-ui/react'
 import {
@@ -20,170 +23,199 @@ import {
   TagRightIcon,
   TagCloseButton,
 } from '@chakra-ui/react'
-const board = [
-  [
-    {variant:'solid',boardNumber:100},
-    {variant:'subtle',boardNumber:99},
-    {variant:'solid',boardNumber:98},
-    {variant:'subtle',boardNumber:97},
-    {variant:'solid',boardNumber:96},
-    {variant:'subtle',boardNumber:95},
-    {variant:'solid',boardNumber:94},
-    {variant:'subtle',boardNumber:93},
-    {variant:'solid',boardNumber:92},
-    {variant:'subtle',boardNumber:91},
-  ],
-  [
-    {variant:'subtle',boardNumber:81},
-    {variant:'solid',boardNumber:82},
-    {variant:'subtle',boardNumber:83},
-    {variant:'solid',boardNumber:84},
-    {variant:'subtle',boardNumber:85},
-    {variant:'solid',boardNumber:86},
-    {variant:'subtle',boardNumber:87},
-    {variant:'solid',boardNumber:88},
-    {variant:'subtle',boardNumber:89},
-    {variant:'solid',boardNumber:90},
-  ],
-  [
-    {variant:'solid',boardNumber:80},
-    {variant:'subtle',boardNumber:79},
-    {variant:'solid',boardNumber:78},
-    {variant:'subtle',boardNumber:77},
-    {variant:'solid',boardNumber:76},
-    {variant:'subtle',boardNumber:75},
-    {variant:'solid',boardNumber:74},
-    {variant:'subtle',boardNumber:73},
-    {variant:'solid',boardNumber:72},
-    {variant:'subtle',boardNumber:71},
-  ],
-  [
-    {variant:'subtle',boardNumber:61},
-    {variant:'solid',boardNumber:62},
-    {variant:'subtle',boardNumber:63},
-    {variant:'solid',boardNumber:64},
-    {variant:'subtle',boardNumber:65},
-    {variant:'solid',boardNumber:66},
-    {variant:'subtle',boardNumber:67},
-    {variant:'solid',boardNumber:68},
-    {variant:'subtle',boardNumber:69},
-    {variant:'solid',boardNumber:70},
-  ],
-  [
-    {variant:'solid',boardNumber:60},
-    {variant:'subtle',boardNumber:59},
-    {variant:'solid',boardNumber:58},
-    {variant:'subtle',boardNumber:57},
-    {variant:'solid',boardNumber:56},
-    {variant:'subtle',boardNumber:55},
-    {variant:'solid',boardNumber:54},
-    {variant:'subtle',boardNumber:53},
-    {variant:'solid',boardNumber:52},
-    {variant:'subtle',boardNumber:51},
-  ],
-  [
-    {variant:'subtle',boardNumber:41},
-    {variant:'solid',boardNumber:42},
-    {variant:'subtle',boardNumber:43},
-    {variant:'solid',boardNumber:44},
-    {variant:'subtle',boardNumber:45},
-    {variant:'solid',boardNumber:46},
-    {variant:'subtle',boardNumber:47},
-    {variant:'solid',boardNumber:48},
-    {variant:'subtle',boardNumber:49},
-    {variant:'solid',boardNumber:50},
-  ],
-  [
-    {variant:'solid',boardNumber:40},
-    {variant:'subtle',boardNumber:39},
-    {variant:'solid',boardNumber:38},
-    {variant:'subtle',boardNumber:37},
-    {variant:'solid',boardNumber:36},
-    {variant:'subtle',boardNumber:35},
-    {variant:'solid',boardNumber:34},
-    {variant:'subtle',boardNumber:33},
-    {variant:'solid',boardNumber:32},
-    {variant:'subtle',boardNumber:31},
-  ],
-  [
-    {variant:'subtle',boardNumber:21},
-    {variant:'solid',boardNumber:22},
-    {variant:'subtle',boardNumber:23},
-    {variant:'solid',boardNumber:24},
-    {variant:'subtle',boardNumber:25},
-    {variant:'solid',boardNumber:26},
-    {variant:'subtle',boardNumber:27},
-    {variant:'solid',boardNumber:28},
-    {variant:'subtle',boardNumber:29},
-    {variant:'solid',boardNumber:30},
-  ],
-  [
-    {variant:'solid',boardNumber:20},
-    {variant:'subtle',boardNumber:19},
-    {variant:'solid',boardNumber:18},
-    {variant:'subtle',boardNumber:17},
-    {variant:'solid',boardNumber:16},
-    {variant:'subtle',boardNumber:15},
-    {variant:'solid',boardNumber:14},
-    {variant:'subtle',boardNumber:13},
-    {variant:'solid',boardNumber:12},
-    {variant:'subtle',boardNumber:11},
-  ],
-  [
-    {variant:'subtle',boardNumber:1},
-    {variant:'solid',boardNumber:2},
-    {variant:'subtle',boardNumber:3},
-    {variant:'solid',boardNumber:4},
-    {variant:'subtle',boardNumber:5},
-    {variant:'solid',boardNumber:6},
-    {variant:'subtle',boardNumber:7},
-    {variant:'solid',boardNumber:8},
-    {variant:'subtle',boardNumber:9},
-    {variant:'solid',boardNumber:10},
-  ],
-]
-const player = [
-  {pic:'data:image/png;base64,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',
-  name:"1player"},
-{pic:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHkTJJTptl-fUm6HF2hNAMZj3STmqNyllw4Q&usqp=CAU',
-name:"2player"}
-]
-var playersTurn = 0
-
+import {board} from './board';
+import { motion,AnimatePresence  } from "framer-motion"
+import Dise from './dise'
+import OneMoveSound from "./479818-Toppling_The_King_09.mp3"
+import TwoMoveSound from "./2.mpeg"
+import ThreeMoveSound from "./3.mpeg"
+import FourMoveSound from "./4.mpeg"
+import FiveMoveSound from "./5.mpeg"
+import SixMoveSound from "./6.mpeg"
 function App() {
+  const [player, setPlayer] = useState([
+    {name:"1player"},
+    {name:"2player"}
+  ])
+  var audio = new Audio(OneMoveSound);
+  const OneMoveSoundAudio = new Audio(OneMoveSound);
+  const TwoMoveSoundAudio = new Audio(TwoMoveSound);
+  const ThreeMoveSoundAudio = new Audio(ThreeMoveSound);
+  const FourMoveSoundAudio = new Audio(FourMoveSound);
+  const FiveMoveSoundAudio = new Audio(FiveMoveSound);
+  const SixMoveSoundAudio = new Audio(SixMoveSound);
+
+  const [playerMotion,setPlayerMotion] = useState([[[0,-180],-30,1],[[22,-180],-30,1]])
+  const [playersTurn,setPlayersTurn] = useState(0)
   const [position,setPosition] = useState([1,1])
-  const randomNumberGeneration=()=>{
-    return Math.floor((Math.random() * 6) + 1);
+  const [movingPiecs,setMovingPiecs] = useState(false)
+  const handleChangeNumberOfPlayers=()=>{
+    setPlayer(
+      player.length===2?[
+          {name:"1player"},
+        {name:"2player"},
+        {name:"3player"},
+        {name:"4player"},
+      ]:[
+        {name:"1player"},
+      {name:"2player"}
+      ]
+    )
+    setPlayerMotion(
+      player.length===2?[
+        [[0,-180],-30,1],
+        [[22,-180],-30,1],
+        [[44,-180],-30,1],
+        [[66,-180],-30,1]]
+        :[
+          [[0,-180],-30,1],
+          [[22,-180],-30,1]
+        ]
+    )
+    setPosition(
+      player.length===2?[1,1,1,1]:[1,1]
+    )
+    setPlayersTurn(0)
   }
+
   const win=(player)=>{
     console.log(player,"wins")
   }
-  const handleOnClickDice=async()=>{
-
-    const random = randomNumberGeneration()
-    console.log(random,"random",playersTurn)
+  const formula=e=>{
+    if(e%10===0){
+        if(parseInt(e/10)%2===0){
+        return -180
+    }
+    if(parseInt(e/10)%2!==0){
+        return 180
+    }}  
+    if(parseInt(e/10)%2===0){
+        return -180+(40*(e%10))
+    }
+    if(parseInt(e/10)%2!==0){
+        return 180-(40*(e%10))
+    }
+}
+  const formulaY=e=>{
+    return -30-(50*parseInt(e/10))
+  }
+  const playAudio=(random)=>{
+   
+  }
+  const handlePlayerMotion=async(random)=>{
+    var currentMove = 1
+    const newplayerMotion = [...playerMotion]
+    newplayerMotion[playersTurn] = [[],[],1]
     const newPosition = [...position] 
-    if(position[playersTurn]+random<=100){ //dont incriment the position above 100 as there is only 100 columns
-      newPosition[playersTurn] = position[playersTurn]+random
+    // console.log(xPossition,yPossition,newPosition)
+    // playAudio(random)
+    if(random>1){
+      
+      while(currentMove<=random){
+        // console.log(parseInt(newPosition[playersTurn]/10)%2===0,newPosition[playersTurn]/10);
+        // await audio.play()
+        newplayerMotion[playersTurn][0].push(formula(newPosition[playersTurn]))
+        newplayerMotion[playersTurn][1].push(formulaY(newPosition[playersTurn]))
+        
+        newPosition[playersTurn] = newPosition[playersTurn]+1
+        currentMove++
+      }
       await setPosition(newPosition)
+    }else{
+      newplayerMotion[playersTurn][0] = formula(newPosition[playersTurn])
+      newplayerMotion[playersTurn][1] = formulaY(newPosition[playersTurn])
+    }
+    if (random===1){
+      OneMoveSoundAudio.play() 
+      newplayerMotion[playersTurn][2] = 0.3
+      
+    }else if(random===2){
+      TwoMoveSoundAudio.play() 
+      newplayerMotion[playersTurn][2] = 0.6
+      
+    }else if(random===3){
+      
+      ThreeMoveSoundAudio.play()
+      newplayerMotion[playersTurn][2] = 0.9
+
+    }else if(random===4){
+      FourMoveSoundAudio.play() 
+      newplayerMotion[playersTurn][2] = 1
+      
+    }else if(random===5){
+      FiveMoveSoundAudio.play() 
+      newplayerMotion[playersTurn][2] = 1.2
+
+    }else if(random===6){
+      newplayerMotion[playersTurn][2] = 1.5
+
+      SixMoveSoundAudio.play() 
+    }
+    await setPlayerMotion(newplayerMotion)
+   
+    return 1
+  }
+  const handleOnClickDice=async(random)=>{
+    if(position[playersTurn]+random<=100){ //dont incriment the position above 100 as there is only 100 columns
+      await handlePlayerMotion(random)
+      // console.log(random)
+      await setMovingPiecs(!movingPiecs)
+      // newPosition[playersTurn] = position[playersTurn]+random
     }
     if (random!=6){ //player who got 6 has another chance to roll the dice
-      playersTurn++
+      // console.log(random,"is not equal 6 so change player")
+      // playersTurn+1
+      if (playersTurn+1==player.length){
+        // setPlayersTurn(newChange)
+        setPlayersTurn(0)
+  
+      }else{
+        setPlayersTurn(playersTurn+1)
+      }
+    }else{
+      // console.log(random,"is  equal 6 dont so change player")
     }
-    if (playersTurn==player.length){
-      playersTurn=0
-    }
+    
   }
-  return (
-    <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
+  const sizeOfPices = 22
+
+  return (<ChakraProvider theme={theme}>
+    <button onClick={()=>audio.play()}>
+      click to hear sound
+    </button>
+    <Container maxW="lg" py={{ base: '12', md: '24' }} px={{ base: '0', sm: '8' }} style={{paddingTop:0}}>
+      <Box textAlign="center" fontSize="xl" 
+          // py={{ base: '0', sm: '8' }}
+          // px={{ base: '0', sm: '10' }}
+          >
         <Grid minH="100vh" p={3}>
           <ColorModeSwitcher justifySelf="flex-end" />
           <VStack spacing={8}>
-            <button onClick={handleOnClickDice}>dice</button>
-            <Logo h="40px"  pointerEvents="none" />
-            <Ladder h="150px" w="30px" style={{position:'absolute',bottom:'150px',left:'80px'}} pointerEvents="none" />
-           123 {/* <Text>
+          <Stack spacing="6">
+          {/* <Logo /> */}
+          <Stack spacing={{ base: '2', md: '3' }} textAlign="center">
+            <Heading size={useBreakpointValue({ base: 'xs', md: 'sm' })}>
+            Snakes and Ladders
+            </Heading>
+            {/* <HStack spacing="1" justify="center">
+              <Text color="muted">Haven't played before? Lets try it</Text>
+            </HStack> */}
+          </Stack>
+        </Stack>
+        <Stack spacing="6">
+              {/* <Button variant="outline">Start Game</Button> */}
+              <HStack>
+                <Divider />
+                <Text fontSize="sm" whiteSpace="nowrap" 
+                color="muted"
+                >
+                  play and have fun
+                </Text>
+                <Divider />
+              </HStack>
+              {/* <OAuthButtonGroup /> */}
+            </Stack>
+           {/* <Text>
               Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
             </Text> */}
             {/* <Link
@@ -195,29 +227,187 @@ function App() {
             >
               Learn Chakra
             </Link> */}
-</VStack>
-<VStack spacing={8}>
+</VStack><VStack spacing={8}>
+  <div style={{position:'relative',width:100,height:0}}>
+<Ladder h="150px" w="30px" style={{position:'absolute',top:'150px',left:'80px',transform: 'rotate(20deg)'}} />
+<Ladder h="130px" w="30px" style={{position:'absolute',top:'85px',left:'-100px',transform: 'rotate(50deg)'}} />
+<Ladder h="150px" w="30px" style={{position:'absolute',top:'360px',left:'70px',transform: 'rotate(300deg)'}} />
+
+  </div>
+
 {board.map(e=>{return <Stack direction='row' style={{marginTop:0}}>
-  {e.map(el=>{return <Badge variant={el['variant']} style={{width:50,height:50,margin:0}} colorScheme='green'>
+  {e.map(el=>{return <Badge variant={el['variant']} style={{width:40,height:50,margin:0}} colorScheme='green'>
     <Text style={{display:'flex'}}>{el['boardNumber']}</Text>
     {
       position.includes(el['boardNumber']) &&
         position.map((i,index)=>{
-          return el['boardNumber']==i && <Avatar
+          // console.log(position.filter(e=>i===e).length,"position.filter(e=>i===e).length")
+          return el['boardNumber']==i
+          &&false 
+          && <AnimatePresence><motion.div 
+          
+          animate={{  scale: [1.2,1,1.5,1],rotate: 0,x: 0 }}
+    // transition={{ duration: 1 }}
+    exit={{y:-100,transition:{delay:2}}}
+          style={{position:'relative'}}><Avatar
           // src={player[index].pic}
+          style={{width:sizeOfPices,height:sizeOfPices,position:'absolute',
+          left:position.filter(e=>i===e).length===1
+          ?10:
+          position.filter(e=>i===e).length===2
+          ?index*5:
+          position.filter(e=>i===e).length===3
+          ?index*1
+          :index*5}}
           size='xs'
           name={player[index].name}
           ml={-1}
           mr={2}
-        />
+        /></motion.div></AnimatePresence>
         })
   
     }
   </Badge>
 })}
   </Stack>})}
+  <AnimatePresence>
+
+
+  {player.length==2? <div 
+          style={{marginTop:0,height:0}}><motion.div 
+          key={"1"}
+          animate={{  scale: [1.2,1],
+            x: playerMotion[0][0],
+            // x: [0,-180],
+            y:playerMotion[0][1],
+            transition:{duration:playerMotion[0][2]},
+           }}
+          // transition={{ duration: 1 }}
+          exit={{y:-100}}
+          style={{marginTop:0,height:0}}
+          >
+            <Avatar
+            name={"1player"}
+          style={{
+            width:22,
+            height:22,
+            }}
+          ml={-1}
+          mr={2}
+          size='xs'
+          /></motion.div>
+          <motion.div 
+          key={"2"}
+          animate={{  scale: [1.2,1],
+            x: playerMotion[1][0],
+            y:playerMotion[1][1],
+            transition:{duration:playerMotion[1][2]},
+           }}
+          // transition={{ duration: 1 }}
+          exit={{y:-100}}
+          style={{marginTop:0,height:0}}
+          >
+            <Avatar
+            name={"2player"}
+          style={{
+            width:22,
+            height:22,
+            }}
+          ml={-1}
+          mr={2}
+          size='xs'
+          /></motion.div></div>:
+          <div 
+          style={{marginTop:0,height:0}}>
+            <motion.div 
+          key={"1"}
+          animate={{  scale: [1.2,1],
+            x: playerMotion[0][0],
+            y:playerMotion[0][1],
+            transition:{duration:playerMotion[0][2]},
+           }}
+          // transition={{ duration: 1 }}
+          exit={{y:-100}}
+          style={{marginTop:0,height:0}}
+          >
+            <Avatar
+            name={"1player"}
+          style={{
+            width:22,
+            height:22,
+            }}
+          ml={-1}
+          mr={2}
+          size='xs'
+          /></motion.div>
+          <motion.div 
+          key={"2"}
+          animate={{  scale: [1.2,1],
+            x: playerMotion[1][0],
+            y:playerMotion[1][1],
+            transition:{duration:playerMotion[1][2]},
+           }}
+          // transition={{ duration: 1 }}
+          exit={{y:-100}}
+          style={{marginTop:0,height:0}}
+          >
+            <Avatar
+            name={"2player"}
+          style={{
+            width:22,
+            height:22,
+            }}
+          ml={-1}
+          mr={2}
+          size='xs'
+          /></motion.div>
+
+<motion.div 
+          key={"3"}
+          animate={{  scale: [1.2,1],
+            x: playerMotion[2][0],
+            y:playerMotion[2][1],
+            transition:{duration:playerMotion[2][2]},
+           }}
+          // transition={{ duration: 1 }}
+          exit={{y:-100}}
+          style={{marginTop:0,height:0}}
+          >
+            <Avatar
+            name={"3player"}
+          style={{
+            width:22,
+            height:22,
+            }}
+          ml={-1}
+          mr={2}
+          size='xs'
+          /></motion.div>
+          <motion.div 
+          key={"4"}
+          animate={{  scale: [1.2,1],
+            x: playerMotion[3][0],
+            y:playerMotion[3][1],
+            transition:{duration:playerMotion[3][2]},
+           }}
+          // transition={{ duration: 1 }}
+          exit={{y:-100}}
+          style={{marginTop:0,height:0}}
+          >
+            <Avatar
+            name={"4player"}
+          style={{
+            width:22,
+            height:22,
+            }}
+          ml={-1}
+          mr={2}
+          size='xs'
+          /></motion.div>
+            </div>}
+          </AnimatePresence>
 </VStack>
-<HStack spacing={4}>
+{/* <HStack spacing={4}>
   {['sm', 'md', 'lg'].map((size) => (
     <Tag
       size={size}
@@ -240,9 +430,42 @@ function App() {
     mr={2}
   />
   <TagLabel>Segun</TagLabel>
-</Tag>
+</Tag> */}
         </Grid>
+        <HStack justify="space-between">
+                {/* <Button  colorScheme="blue" size="md">
+                Switch to 2 player
+              </Button>
+              <Button  colorScheme="blue" size="md">
+                Switch to 4 player
+              </Button> */}
+      
+      {player.map((e,i)=>{
+        return <div style={{background:i===playersTurn?'yellow':'red'}}>
+          <Dise  onClick={handleOnClickDice} disable={!(i===playersTurn)}/>
+          <Tag size='md' colorScheme='red' borderRadius='full'>
+  <Avatar
+    // src='https://bit.ly/sage-adebayo'
+    size='xs'
+    name={player[i].name}
+    ml={-1}
+    mr={2}
+  />
+  <TagLabel>{player[i].name}</TagLabel>
+</Tag> 
+        </div>
+      })}
+            </HStack>
       </Box>
+      <HStack justify="center">
+      <Button 
+              size={'sm'}
+              onClick={handleChangeNumberOfPlayers}
+            //   variant="outline" 
+              colorScheme="blue">{player.length===2?"Switch to 4 Players":"Switch to 2 players"}</Button>
+              </HStack>
+</Container>
+
     </ChakraProvider>
   );
 }

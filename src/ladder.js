@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, keyframes, usePrefersReducedMotion } from '@chakra-ui/react';
 // import logo from './ladder_clip_art_23441/Ladder_clip_art_hight.png';
-import logo from './portablejim_snakes_and_ladders_clip_art_23440/snake1.png';
+import logo from './Ladder.svg.png';
 
 const spin = keyframes`
   from { transform: rotate(0deg); }
